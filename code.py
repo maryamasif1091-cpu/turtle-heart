@@ -1,11 +1,24 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Mathematical Heart", layout="centered")
+st.set_page_config(page_title="Heart", layout="centered")
 
-st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>Mathematical Heart Animation</h1>", unsafe_allow_html=True)
+# Hide default Streamlit padding & header
+st.markdown("""
+    <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+        .block-container {
+            padding-top: 0rem;
+            padding-bottom: 0rem;
+            padding-left: 0rem;
+            padding-right: 0rem;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-# HTML/Canvas animation inside Streamlit
+# HTML/Canvas animation with changing background colors
 heart_html = """
 <!DOCTYPE html>
 <html>
@@ -18,9 +31,11 @@ heart_html = """
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
+            transition: background-color 2s ease;
         }
         canvas {
-            background-color: black;
+            background-color: transparent;
         }
     </style>
 </head>
@@ -39,7 +54,15 @@ heart_html = """
         const scale = 10;
 
         const colors = ["red", "orange", "yellow", "green", "cyan", "lime", "purple", "pink"];
+        const bgColors = ["black", "lightblue", "cyan", "darkblue", "purple", "midnightblue"];
+        let bgIndex = 0;
         let i = 0;
+
+        // Background color changing interval
+        setInterval(() => {
+            bgIndex = (bgIndex + 1) % bgColors.length;
+            document.body.style.backgroundColor = bgColors[bgIndex];
+        }, 3000);
 
         function drawNextPoint() {
             if (i >= 120) return;
@@ -67,4 +90,4 @@ heart_html = """
 </html>
 """
 
-components.html(heart_html, height=400)
+components.html(heart_html, height=450)
