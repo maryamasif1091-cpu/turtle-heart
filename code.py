@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Heart", layout="centered")
 
-# Hide Streamlit header & margins
+# Hide default Streamlit elements
 st.markdown("""
     <style>
         #MainMenu {visibility: hidden;}
@@ -18,7 +18,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# HTML/Canvas code with 3 dark backgrounds & glowing neon heart
+# HTML/Canvas code with stars at the end of each line
 heart_html = """
 <!DOCTYPE html>
 <html>
@@ -45,7 +45,7 @@ heart_html = """
         const canvas = document.getElementById("heartCanvas");
         const ctx = canvas.getContext("2d");
 
-        const size = 350;
+        const size = 380;
         canvas.width = size;
         canvas.height = size;
 
@@ -53,22 +53,47 @@ heart_html = """
         const centerY = canvas.height / 2;
         const scale = 10;
 
-        // Ultra-bright neon palette for high contrast
         const neonColors = [
             "#FF007F", "#00F0FF", "#00FF66", "#FF00F5", 
             "#FFFF00", "#FF5F00", "#9D00FF", "#00FFA6"
         ];
         
-        // Strictly 3 dark background colors
         const bgColors = ["#000000", "#1A0033", "#000524"]; 
         let bgIndex = 0;
         let i = 0;
 
-        // Background transition loop
+        // Background color transition loop
         setInterval(() => {
             bgIndex = (bgIndex + 1) % bgColors.length;
             document.body.style.backgroundColor = bgColors[bgIndex];
         }, 3500);
+
+        // Helper function to draw star burst at line tips
+        function drawStar(cx, cy, spikes, outerRadius, innerRadius, color) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            let step = Math.PI / spikes;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+
+            for (let k = 0; k < spikes; k++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
 
         function drawNextPoint() {
             if (i >= 120) return;
@@ -77,18 +102,23 @@ heart_html = """
             let x = 16 * Math.pow(Math.sin(angle), 3) * scale;
             let y = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)) * scale;
 
+            let targetX = centerX + x;
+            let targetY = centerY + y;
             let color = neonColors[Math.floor(Math.random() * neonColors.length)];
 
-            // Interactive glowing lines effect
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 6;
             ctx.shadowColor = color;
 
+            // Draw line from center
             ctx.beginPath();
             ctx.moveTo(centerX, centerY - 20);
-            ctx.lineTo(centerX + x, centerY + y);
+            ctx.lineTo(targetX, targetY);
             ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.5;
             ctx.stroke();
+
+            // Draw star at tip
+            drawStar(targetX, targetY, 4, 6, 2, color);
 
             i++;
             setTimeout(drawNextPoint, 30);
