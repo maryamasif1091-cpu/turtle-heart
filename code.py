@@ -18,7 +18,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# HTML/Canvas code with stars at the end of each line
+
 heart_html = """
 <!DOCTYPE html>
 <html>
@@ -62,13 +62,13 @@ heart_html = """
         let bgIndex = 0;
         let i = 0;
 
-        // Background color transition loop
+      
         setInterval(() => {
             bgIndex = (bgIndex + 1) % bgColors.length;
             document.body.style.backgroundColor = bgColors[bgIndex];
         }, 3500);
 
-        // Helper function to draw star burst at line tips
+       
         function drawStar(cx, cy, spikes, outerRadius, innerRadius, color) {
             let rot = Math.PI / 2 * 3;
             let x = cx;
@@ -109,7 +109,7 @@ heart_html = """
             ctx.shadowBlur = 6;
             ctx.shadowColor = color;
 
-            // Draw line from center
+           
             ctx.beginPath();
             ctx.moveTo(centerX, centerY - 20);
             ctx.lineTo(targetX, targetY);
@@ -117,7 +117,7 @@ heart_html = """
             ctx.lineWidth = 1.5;
             ctx.stroke();
 
-            // Draw star at tip
+          
             drawStar(targetX, targetY, 4, 6, 2, color);
 
             i++;
