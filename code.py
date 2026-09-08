@@ -1,11 +1,24 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Mathematical Heart", layout="centered")
+st.set_page_config(page_title="Heart", layout="wide")
 
-st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>Mathematical Heart Animation</h1>", unsafe_allow_html=True)
+# CSS to hide Streamlit header and padding
+st.markdown("""
+    <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+        .block-container {
+            padding-top: 0rem;
+            padding-bottom: 0rem;
+            padding-left: 0rem;
+            padding-right: 0rem;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-# HTML/Canvas animation inside Streamlit
+# Full screen canvas without text
 heart_html = """
 <!DOCTYPE html>
 <html>
@@ -18,6 +31,7 @@ heart_html = """
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
         canvas {
             background-color: black;
@@ -30,13 +44,14 @@ heart_html = """
         const canvas = document.getElementById("heartCanvas");
         const ctx = canvas.getContext("2d");
 
-        const size = 350;
+        // Bigger size for desktop & mobile screen
+        const size = Math.min(window.innerWidth, 600);
         canvas.width = size;
         canvas.height = size;
 
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const scale = 10;
+        const scale = size / 22; // Scale increased for larger heart
 
         const colors = ["red", "orange", "yellow", "green", "cyan", "lime", "purple", "pink"];
         let i = 0;
@@ -54,7 +69,7 @@ heart_html = """
             ctx.moveTo(centerX, centerY - 20);
             ctx.lineTo(centerX + x, centerY + y);
             ctx.strokeStyle = color;
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 2;
             ctx.stroke();
 
             i++;
@@ -67,4 +82,4 @@ heart_html = """
 </html>
 """
 
-components.html(heart_html, height=400)
+components.html(heart_html, height=650)
